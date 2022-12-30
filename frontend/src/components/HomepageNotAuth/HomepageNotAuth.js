@@ -1,0 +1,86 @@
+import React from "react";
+
+import Login from "../Login/Login.js";
+
+import RegisterElev from "../RegisterElev/RegisterElev.js";
+import RegisterStudent from "../RegisterStudent/RegisterStudent.js";
+
+class HomepageNotAuth extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isElev: false,
+      isStudent: false,
+      didChooseType: false,
+      isLogin: false,
+      isRegister: false,
+      hide2Buttons: false,
+    };
+  }
+
+  handleFirstButton = (event) => {
+    event.preventDefault();
+
+    if (!this.state.didChooseType) {
+      this.setState({isStudent: true});
+      this.setState({didChooseType: true});
+    } else {
+      this.setState({isLogin: true});
+      this.setState({hide2Buttons: true});
+    }
+  }
+
+  handleSecondButton = (event) => {
+    event.preventDefault();
+    
+    if (!this.state.didChooseType) {
+      this.setState({isElev: true});
+      this.setState({didChooseType: true});
+    } else {
+      this.setState({isRegister: true});
+      this.setState({hide2Buttons: true});
+    }
+  }
+
+  render() {
+    return (
+    <>
+        <div style={{display: this.state.hide2Buttons ? "none" : "initial" }}>
+          <div style={{height:"10vw", display: "flex", justifyContent:"center"}}><p style={{fontSize:"3vw"}}>Eu sunt:</p></div>
+
+          <form style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+
+            <button style={{height: "50vw", width: "50%", fontSize:"5vw", backgroundColor: "blue", opacity:"0.5"}}
+              onClick={this.handleFirstButton}>
+                <p style={{color:"black"}}>
+                  {this.state.didChooseType ? "Login" : "Student"} </p>
+            </button>
+
+            <button style={{height: "50vw", width: "50%", fontSize:"5vw" }} onClick={this.handleSecondButton}>
+              <p>{this.state.didChooseType ? "Register" : "Elev"}</p>
+            </button>
+
+          </form>
+        </div>
+        
+        <div style={{display: this.state.hide2Buttons && this.state.isLogin ? "initial" : "none" }}>
+          <Login/>
+        </div>
+
+        <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isElev ? "initial" : "none" }}>
+          <RegisterElev/>
+        </div>
+        
+        <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isStudent ? "initial" : "none" }}>
+          <RegisterStudent/>
+        </div>
+        
+    </>
+    );
+  }
+
+}
+
+export default HomepageNotAuth;
