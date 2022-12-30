@@ -1,7 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import json
+
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:dumi-199-secure@localhost/users'
 db = SQLAlchemy(app)
 
@@ -93,7 +97,21 @@ def registerStudent():
     db.session.add(newStudent)
     db.session.commit()
 
-    return f"Student {firstName} {lastName} has been added to the database!"
+    data = {
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "password": password,
+        "school": school,
+        "GPA": GPA,
+        "contestsScore": contestsScore,
+        "testsScore": testsScore,
+        "testsSolved": testsSolved
+    }
+
+    r = Response(response=json.dumps({"message": "created", "data": data}), status=201, mimetype="application/json")
+    r.headers["Content-Type"] = "application/json; charset=utf-8"
+    return r
 
 @app.route("/getAllStudents" , methods=['GET'])
 def getStudents():
@@ -140,7 +158,7 @@ def deleteStudent(id):
     db.session.delete(student)
     db.session.commit()
 
-    return f"Student {student.firstName} {student.lastName} has been deleted from the database!"
+    return f"Student {student.firstName} {student.lastName} has been deleted from the database"
 
 # update student
 @app.route("/updateStudent/<id>" , methods=['PUT'])
@@ -183,7 +201,7 @@ def registerHelper():
     db.session.add(newHelper)
     db.session.commit()
 
-    return f"Helper {firstName} {lastName} has been added to the database!"
+    return f"Helper {firstName} {lastName} has been added to the database"
 
 @app.route("/getAllHelpers" , methods=['GET'])
 def getHelpers():
@@ -270,6 +288,6 @@ def updateHelper(id):
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=3000)
+    app.run(host='127.0.0.1', port=3001, debug=True)
 
 
