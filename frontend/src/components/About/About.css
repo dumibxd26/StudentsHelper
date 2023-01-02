@@ -1,0 +1,22 @@
+.bigBox {
+    height:100vh;
+    width: 100vw;
+    background: gray;
+
+}
+
+.smallBox{
+    padding: 3vw;
+    flex-wrap: no-wrap;
+}
+
+.styleAvatar {
+    width: 15vw;
+    height: 30vw;
+    border-radius: 2vw;
+}
+
+.infos {
+    margin-left: 2vw;
+    font-size: 1.5vw;
+}

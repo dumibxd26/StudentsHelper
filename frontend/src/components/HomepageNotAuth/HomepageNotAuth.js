@@ -29,6 +29,7 @@ class HomepageNotAuth extends React.Component {
     } else {
       this.setState({isLogin: true});
       this.setState({hide2Buttons: true});
+      // this.props.visibilityInParent();
     }
   }
 
@@ -41,6 +42,7 @@ class HomepageNotAuth extends React.Component {
     } else {
       this.setState({isRegister: true});
       this.setState({hide2Buttons: true});
+      // this.props.visibilityInParent();
     }
   }
 
@@ -66,11 +68,11 @@ class HomepageNotAuth extends React.Component {
         </div>
         
         <div style={{display: this.state.hide2Buttons && this.state.isLogin ? "initial" : "none" }}>
-          <Login/>
+          <Login />
         </div>
 
         <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isElev ? "initial" : "none" }}>
-          <RegisterElev/>
+          <RegisterElev visibilityInParent={this.props.visibilityInParent}/>
         </div>
         
         <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isStudent ? "initial" : "none" }}>
