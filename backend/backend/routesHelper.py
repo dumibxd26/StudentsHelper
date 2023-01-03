@@ -2,6 +2,10 @@ from backend import app
 from backend import dbs
 from backend import serviceHelper
 
+@app.route("/loginHelper", methods=['POST'])
+def loginHelper():
+    return serviceHelper.loginHelperService()
+
 @app.route("/registerHelper", methods=['POST'])
 def registerHelper():
     return serviceHelper.registerHelperService()
@@ -21,3 +25,8 @@ def deleteHelper(id):
 @app.route("/updateHelper/<id>" , methods=['PUT'])
 def updateHelper(id):
     return serviceHelper.updateHelperService(id)
+
+# extra
+@app.route("/checkTokenForFrontend/<token>" , methods=['GET'])
+def checkTokenForFrontend(token):
+    return serviceHelper.checkTokenForFrontendService(token)

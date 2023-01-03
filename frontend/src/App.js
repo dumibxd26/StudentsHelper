@@ -14,6 +14,7 @@ class App extends React.Component {
 
     this.state = {
       showHompageNotAuth: true,
+      userType: null
     }
   }
 
@@ -21,15 +22,64 @@ class App extends React.Component {
     this.setState({showHompageNotAuth: false});
   }
 
+  componentDidMount() {
+
+    const JWT = localStorage.getItem('token');
+
+    
+    // fetch("http://localhost:5000/getAllHelpers", {
+    //   method: "GET",
+    //   headers: {"Content-Type": "application/json"},
+    //   })
+    // .then(response => response.json())
+    // .then(info => {
+    //   console.log(info)
+    // })
+    // .catch(error => {
+    //   console.log(error);
+    // });
+
+    // fetch("http://localhost:5000/checkTokenForFrontend", {
+    //   method: "POST",
+    //   headers: {"Content-Type": "application/json"},
+    //   body: JSON.stringify({"token": JWT})
+    // })
+    // .then(response => response.json())
+    // .then(info => {
+    //   console.log(info)
+    // })
+    // .catch(error => {
+    //   console.log(error);
+    // });
+
+    fetch("http://localhost:5000/checkTokenForFrontend/" + JWT, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    })
+    .then(response => response.json())
+    .then(info => {
+      
+       if (info.message === "Token valid") {
+          this.setState({showHompageNotAuth: false});
+          this.setState({userType: info.userType});
+       }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+  }
+
   render() {
     return ( <>
 
-      {/* {this.state.showHompageNotAuth && <HomepageNotAuth visibilityInParent={this.handleNotAuthVisibility}/> } */}
+      {this.state.showHompageNotAuth && <HomepageNotAuth visibilityInParent={this.handleNotAuthVisibility}/> }
 
-      {this.state.showHompageNotAuth &&
+      {!this.state.showHompageNotAuth &&
 
         <Router>
           <NavbarComponent/>
+          {this.state.userType}
           <Routes>
             
               <Route exact path="/about" element={<About />}/>

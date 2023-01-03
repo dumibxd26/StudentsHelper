@@ -7,16 +7,15 @@ import json
 import jwt
 from datetime import datetime, timedelta
 
-
 def loginStudentService():
     req = request.get_json()
 
     student = dbs.Student.query.filter_by(email=req['email']).first()
 
     if not student:
-        return Response(response=json.dumps({"message": "User does not exist"}), status=400, mimetype="application/json")
+        return Response(response=json.dumps({"message": "Wrong credentials"}), status=403, mimetype="application/json")
 
-    if check_password_hash(student.password, req['password'], method='sha256'):
+    if check_password_hash(student.password, req['password']):
         token = jwt.encode({'id': student.id, 'userType': 'student',  'exp' : datetime.utcnow() + timedelta(days=7)}, 'SECRET_KEY')
 
         data = {
@@ -36,7 +35,7 @@ def loginStudentService():
         r.headers["Content-Type"] = "application/json; charset=utf-8"
         return r
 
-    return Response(response=json.dumps({"message": "Wrong credentials"}), status=400, mimetype="application/json")
+    return Response(response=json.dumps({"message": "Wrong credentials"}), status=403, mimetype="application/json")
 
 
 

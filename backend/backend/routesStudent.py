@@ -2,6 +2,10 @@ from backend import app
 from backend import dbs
 from backend import serviceStudent
 
+@app.route("/loginStudent", methods=['POST'])
+def loginStudent():
+    return serviceStudent.loginStudentService()
+
 @app.route('/registerStudent' , methods=['POST'])
 def registerStudent():
     return serviceStudent.registerStudentService()
@@ -18,7 +22,6 @@ def getStudent(email):
 def deleteStudent(id):
     return serviceStudent.deleteStudentService(id)
 
-# update student
 @app.route("/updateStudent/<id>" , methods=['PUT'])
 def updateStudent(id):
     return serviceStudent.updateStudentService(id)

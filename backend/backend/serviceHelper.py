@@ -7,15 +7,37 @@ import json
 import jwt
 from datetime import datetime, timedelta
 
+def checkTokenForFrontendService(token):
+    
+    try:
+        data = jwt.decode(token, 'SECRET_KEY' , algorithms=["HS256"])
+
+        # check if it is expired
+        if data['exp'] < datetime.utcnow().timestamp():
+            r = Response(response=json.dumps({"message": "Token expired"}), status=403, mimetype="application/json")
+            r.headers["Content-Type"] = "application/json; charset=utf-8"
+            return r
+        
+        userType = data['userType']
+
+        r = Response(response=json.dumps({"message": "Token valid", "userType": userType}), status=200, mimetype="application/json")
+        r.headers["Content-Type"] = "application/json; charset=utf-8"
+        return r
+    except:
+        r = Response(response=json.dumps({"message": "Token invalid"}), mimetype="application/json")
+        r.headers["Content-Type"] = "application/json; charset=utf-8"
+        return r
+
+
 def loginHelperService():
     req = request.get_json()
 
     helper = dbs.Helper.query.filter_by(email=req['email']).first()
 
     if not helper:
-        return Response(response=json.dumps({"message": "User does not exist"}), status=400, mimetype="application/json")
+        return Response(response=json.dumps({"message": "Wrong credentials"}), status=403, mimetype="application/json")
 
-    if check_password_hash(helper.password, req['password'], method='sha256'):
+    if check_password_hash(helper.password, req['password']):
         token = jwt.encode({'id': helper.id, 'userType': 'helper',  'exp' : datetime.utcnow() + timedelta(days=7)}, 'SECRET_KEY')
 
         data = {
@@ -42,7 +64,7 @@ def loginHelperService():
         r.headers["Content-Type"] = "application/json; charset=utf-8"
         return r
 
-    return Response(response=json.dumps({"message": "Wrong credentials"}), status=400, mimetype="application/json")
+    return Response(response=json.dumps({"message": "Wrong credentials"}), status=403, mimetype="application/json")
 
 def registerHelperService():
     req = request.get_json()

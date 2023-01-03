@@ -5,6 +5,8 @@ class Register extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit = (event) => {
@@ -26,13 +28,13 @@ class Register extends React.Component {
         const ojfPoints = document.querySelector('#ojfPoints').value;
 
         const contestsScore = parseInt(oniPoints * 2, 10) +
-                        parseInt(onmPoints * 2, 10) +
-                        parseInt(onfPoints * 2, 10) +
+                        parseInt(onmPoints * 20, 10) +
+                        parseInt(onfPoints * 20, 10) +
                         parseInt(grigorePoints, 10) +
                         parseInt(phiPoints / 2, 10) +
                         parseInt(ojiPoints, 10) +
-                        parseInt(ojmPoints, 10) +
-                        parseInt(ojfPoints, 10); 
+                        parseInt(ojmPoints * 10, 10) +
+                        parseInt(ojfPoints * 10, 10); 
         const testsSolved = 0;
         const testsScore = 0;
 
@@ -58,8 +60,12 @@ class Register extends React.Component {
         .then(response => response.json())
         .then(info => {
             if (info.message == "created") {
-                // window.location.href = 'http://localhost:3000/homepageAuth';
                 this.props.visibilityInParent();
+                
+                console.log(info)
+                const token = info.token;
+
+                localStorage.setItem('token', token);
             }
         }
         )
@@ -109,7 +115,8 @@ class Register extends React.Component {
                          style={{borderRadius:"5px", marginBottom:"1vw", height: "2vw", width: "100%", fontSize:"2vw", backgroundColor: "white", opacity:"0.5"}}/>
 
 
-                       <button style={{borderRadius:"5px", height: "3vw", width: "100%", fontSize:"2vw", backgroundColor: "blue", opacity:"0.5"}}>Submit</button>
+                        <button type="submit" className={"btn, btn-light"}
+                        style={{borderRadius:"5px", height: "3vw", width: "100%", fontSize:"2vw", opacity:"0.5"}}>Submit</button>
 
                         </form>
                     </div>

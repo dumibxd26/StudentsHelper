@@ -3,7 +3,7 @@ import React from "react";
 import Login from "../Login/Login.js";
 
 import RegisterElev from "../RegisterElev/RegisterElev.js";
-import RegisterStudent from "../RegisterStudent/RegisterStudent.js";
+import RegisterHelper from "../RegisterHelper/RegisterHelper";
 
 class HomepageNotAuth extends React.Component {
 
@@ -12,7 +12,7 @@ class HomepageNotAuth extends React.Component {
 
     this.state = {
       isElev: false,
-      isStudent: false,
+      isHelper: false,
       didChooseType: false,
       isLogin: false,
       isRegister: false,
@@ -24,7 +24,7 @@ class HomepageNotAuth extends React.Component {
     event.preventDefault();
 
     if (!this.state.didChooseType) {
-      this.setState({isStudent: true});
+      this.setState({isHelper: true});
       this.setState({didChooseType: true});
     } else {
       this.setState({isLogin: true});
@@ -68,21 +68,20 @@ class HomepageNotAuth extends React.Component {
         </div>
         
         <div style={{display: this.state.hide2Buttons && this.state.isLogin ? "initial" : "none" }}>
-          <Login />
+          <Login visibilityInParent={this.props.visibilityInParent} isHelper={this.state.isHelper}/>
         </div>
 
         <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isElev ? "initial" : "none" }}>
           <RegisterElev visibilityInParent={this.props.visibilityInParent}/>
         </div>
         
-        <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isStudent ? "initial" : "none" }}>
-          <RegisterStudent/>
+        <div style={{display: this.state.hide2Buttons && this.state.isRegister && this.state.isHelper ? "initial" : "none" }}>
+          <RegisterHelper visibilityInParent={this.props.visibilityInParent}/>
         </div>
         
     </>
     );
   }
-
 }
 
 export default HomepageNotAuth;

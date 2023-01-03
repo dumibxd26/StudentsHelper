@@ -1,0 +1,31 @@
+.borderRegStud {
+  /* height: 100%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5vw;
+  height: 80vw;
+  width: 60%;
+  margin: 5vw;
+
+    /* fallback for old browsers */
+    background: #6a11cb;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+
+.styleInputs {
+  border-radius: 5px;
+  margin-bottom: 1vw;
+  height: 2vmax;
+  width: 20vw;
+  font-size: 2vmin;
+  background-color: white;
+  opacity: 0.5;
+  text-align: center;
+}
