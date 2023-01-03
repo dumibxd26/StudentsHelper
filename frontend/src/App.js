@@ -5,6 +5,7 @@ import HomepageNotAuth from './components/HomepageNotAuth/HomepageNotAuth.js';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import About from "./components/About/About";
 import NavbarComponent from './components/Navbar/Navbar.js';
+import Chat from './components/SocketIO/Chat.js';
 
 class App extends React.Component {
 
@@ -32,10 +33,13 @@ class App extends React.Component {
           <Routes>
             
               <Route exact path="/about" element={<About />}/>
+              <Route exact path="/chat" element={<Chat />}/>
 
           </Routes>
         </Router>
       }
+
+
     </>);
   }
 

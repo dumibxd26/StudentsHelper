@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 CORS(app)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @socketio.on('connect')
 def on_connect():
@@ -17,7 +17,7 @@ def on_disconnect():
 @socketio.on('message')
 def on_message(data):
     print(f'Received message: {data}')
-    send('message', data, broadcast=True)
+    emit('message', data, broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, debug=True)
