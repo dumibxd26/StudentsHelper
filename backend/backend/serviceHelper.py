@@ -19,8 +19,9 @@ def checkTokenForFrontendService(token):
             return r
         
         userType = data['userType']
+        id = data['id']
 
-        r = Response(response=json.dumps({"message": "Token valid", "userType": userType}), status=200, mimetype="application/json")
+        r = Response(response=json.dumps({"message": "Token valid", "userType": userType, "id": id}), status=200, mimetype="application/json")
         r.headers["Content-Type"] = "application/json; charset=utf-8"
         return r
     except:

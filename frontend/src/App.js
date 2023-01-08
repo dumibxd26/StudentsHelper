@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import About from "./components/About/About";
 import NavbarComponent from './components/Navbar/Navbar.js';
 import Chat from './components/SocketIO/Chat.js';
+import SolveTest from './components/SolveTest/SolveTest.js';
 
 class App extends React.Component {
 
@@ -14,14 +15,15 @@ class App extends React.Component {
 
     this.state = {
       showHompageNotAuth: true,
-      userType: null
+      userType: null,
+      waitForResponse: false,
     }
   }
 
   handleNotAuthVisibility = () => {
     this.setState({showHompageNotAuth: false});
   }
-
+    
   componentDidMount() {
 
     const JWT = localStorage.getItem('token');
@@ -52,6 +54,8 @@ class App extends React.Component {
     //   console.log(error);
     // });
 
+    this.state.waitForResponse = true;
+
     fetch("http://localhost:5000/checkTokenForFrontend/" + JWT, {
       method: "GET",
       headers: {"Content-Type": "application/json"},
@@ -63,9 +67,12 @@ class App extends React.Component {
           this.setState({showHompageNotAuth: false});
           this.setState({userType: info.userType});
        }
+
+       this.setState({waitForResponse: false});
     })
     .catch(error => {
       console.log(error);
+      this.setState({waitForResponse: false});
     });
 
   }
@@ -73,17 +80,20 @@ class App extends React.Component {
   render() {
     return ( <>
 
-      {this.state.showHompageNotAuth && <HomepageNotAuth visibilityInParent={this.handleNotAuthVisibility}/> }
+      {this.setState.waitForResponse && <p style={{background: "red", height:"1000px", width: "1000px"}}> Stai otara domle</p>}
 
-      {!this.state.showHompageNotAuth &&
+      {!this.state.waitForResponse && this.state.showHompageNotAuth && <HomepageNotAuth visibilityInParent={this.handleNotAuthVisibility}/> }
+
+      {!this.state.waitForResponse && !this.state.showHompageNotAuth &&
 
         <Router>
-          <NavbarComponent/>
+          <NavbarComponent userType={this.state.userType}/>
           {this.state.userType}
           <Routes>
             
               <Route exact path="/about" element={<About />}/>
               <Route exact path="/chat" element={<Chat />}/>
+              <Route exact path="/solve" element={<SolveTest/>}/>
 
           </Routes>
         </Router>

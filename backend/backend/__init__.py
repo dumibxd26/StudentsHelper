@@ -7,6 +7,7 @@ CORS(app)
 
 from backend import routesHelper
 from backend import routesStudent
+from backend import routesTests
 from backend import dbs
 
 if __name__ == '__main__':

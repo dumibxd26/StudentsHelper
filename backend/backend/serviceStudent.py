@@ -192,6 +192,7 @@ def deleteStudentService(id): #merge
         return r
 
 def updateStudentService(id): #merge
+    req = request.get_json()
 
     token = None
 
@@ -225,15 +226,27 @@ def updateStudentService(id): #merge
 
             
     # student = dbs.Student.query.filter_by(id=id).first()
-    student.firstName = request.json['firstName']
-    student.lastName = request.json['lastName']
-    student.email = request.json['email']
-    student.password = request.json['password']
-    student.school = request.json['school']
-    student.GPA = request.json['GPA']
-    student.contestsScore = request.json['contestsScore']
-    student.testsScore = request.json['testsScore']
-    student.testsSolved = request.json['testsSolved']
+
+    if 'addTest' in req:
+        student.testsScore += int(req['addTest'])
+        student.testsSolved += 1
+    
+    print(req)
+
+    if 'firstName' in req:  
+        student.firstName = req['firstName']
+    if 'lastName' in req:
+        student.lastName = req['lastName']
+    if 'password' in req:
+        student.password = req['password']
+    if 'school' in req:
+        student.school = req['school']
+    if 'GPA' in req:
+        student.GPA = req['GPA']
+    if 'contestsScore' in req:
+        student.contestsScore = req['contestsScore']
+    if 'testsScore' in req:
+        student.testsScore = req['testsScore']
     
     dbs.db.session.commit()
 

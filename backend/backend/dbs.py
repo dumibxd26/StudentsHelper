@@ -74,3 +74,54 @@ class Helper(db.Model):
         self.workingCompanies = workingCompanies
         self.GPA = GPA
         self.contestsScore = contestsScore
+
+class Test(db.Model):
+    __tablename__ = 'test'
+
+    testNumber = db.Column(db.Integer, primary_key=True)
+    Q1 = db.Column(db.String(120), nullable=False)
+    Q2 = db.Column(db.String(120), nullable=False)
+    Q3 = db.Column(db.String(120), nullable=False)
+    Q4 = db.Column(db.String(120), nullable=False)
+    Q5 = db.Column(db.String(120), nullable=False)
+    Q6 = db.Column(db.String(120), nullable=False)
+    Q7 = db.Column(db.String(120), nullable=False)
+    Q8 = db.Column(db.String(120), nullable=False)
+    Q9 = db.Column(db.String(120), nullable=False)
+    Q10 = db.Column(db.String(120), nullable=False)
+    Q1A = db.Column(db.String(120), nullable=False)
+    Q2A = db.Column(db.String(120), nullable=False)
+    Q3A = db.Column(db.String(120), nullable=False)
+    Q4A = db.Column(db.String(120), nullable=False)
+    Q5A = db.Column(db.String(120), nullable=False)
+    Q6A = db.Column(db.String(120), nullable=False)
+    Q7A = db.Column(db.String(120), nullable=False)
+    Q8A = db.Column(db.String(120), nullable=False)
+    Q9A = db.Column(db.String(120), nullable=False)
+    Q10A = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return f"{self.testNumber}"
+    
+    def __init__(self, testNumber, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q1A, Q2A, Q3A, Q4A, Q5A, Q6A, Q7A, Q8A, Q9A, Q10A):
+        self.testNumber = testNumber
+        self.Q1 = Q1
+        self.Q2 = Q2
+        self.Q3 = Q3
+        self.Q4 = Q4
+        self.Q5 = Q5
+        self.Q6 = Q6
+        self.Q7 = Q7
+        self.Q8 = Q8
+        self.Q9 = Q9
+        self.Q10 = Q10
+        self.Q1A = Q1A
+        self.Q2A = Q2A
+        self.Q3A = Q3A
+        self.Q4A = Q4A
+        self.Q5A = Q5A
+        self.Q6A = Q6A
+        self.Q7A = Q7A
+        self.Q8A = Q8A
+        self.Q9A = Q9A
+        self.Q10A = Q10A
