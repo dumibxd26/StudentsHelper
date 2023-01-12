@@ -26,6 +26,10 @@ def deleteHelper(id):
 def updateHelper(id):
     return serviceHelper.updateHelperService(id)
 
+@app.route("/getHelpersByRequirements" , methods=['POST'])
+def getHelpersByRequirements():
+    return serviceHelper.getHelpersByRequirementsService()
+
 # extra
 @app.route("/checkTokenForFrontend/<token>" , methods=['GET'])
 def checkTokenForFrontend(token):

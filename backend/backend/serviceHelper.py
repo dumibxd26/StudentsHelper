@@ -3,6 +3,8 @@ from backend import dbs
 from flask import request, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
+from sqlalchemy import or_
+from sqlalchemy import and_
 
 import jwt
 from datetime import datetime, timedelta
@@ -296,3 +298,60 @@ def updateHelperService(id):
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
+def getHelpersByRequirementsService():
+    req = request.json
+
+    # this helps to create correct querries
+    for key in req:
+        if (req[key] == False):
+            req[key] = None
+
+    workGoogle = req['workGoogle']
+    workMeta = req['workMeta']
+    workBloomberg = req['workBloomberg']
+    workAmazon = req['workAmazon']
+    workMicrosoft = req['workMicrosoft']
+    workApple = req['workApple']
+    workHedgeFund = req['workHedgeFund']
+    workingCompanies = req['workingCompanies']
+    college = req['college']
+    faculty = req['faculty']
+
+    workingCompanies = workingCompanies.lower()
+
+    # search a user with an or condition between working companies and an and condition on college. Also, don't forget to sort them by contestsScore first and then GPA
+    # the search is done in python sqlalchemy on a postgre database
+    # the workingCompanies field in the database must contain the string in workingCompanies
+
+    helpers_data = []
+
+    helpers = dbs.Helper.query\
+        .filter(or_(dbs.Helper.workGoogle == workGoogle, dbs.Helper.workMeta == workMeta, dbs.Helper.workBloomberg == workBloomberg, dbs.Helper.workAmazon == workAmazon, dbs.Helper.workMicrosoft == workMicrosoft, dbs.Helper.workApple == workApple, dbs.Helper.workHedgeFund == workHedgeFund, dbs.Helper.workingCompanies == workingCompanies),
+        and_(dbs.Helper.college == college, dbs.Helper.faculty == faculty))\
+        .order_by(dbs.Helper.contestsScore.desc(), dbs.Helper.GPA.desc())\
+
+    for helper in helpers:
+        print(helper.workingCompanies)
+        print(workingCompanies)
+        if helper.workingCompanies.__contains__(workingCompanies.lower()) :
+            helper_data = {
+                'firstName' : helper.firstName,
+                'lastName' : helper.lastName,
+                'college' : helper.college,
+                'faculty' : helper.faculty,
+                'workGoogle' : helper.workGoogle,
+                'workMeta' : helper.workMeta,
+                'workBloomberg' : helper.workBloomberg,
+                'workAmazon' : helper.workAmazon,
+                'workMicrosoft' : helper.workMicrosoft,
+                'workApple' : helper.workApple,
+                'workHedgeFund' : helper.workHedgeFund,
+                'workingCompanies' : helper.workingCompanies,
+                'GPA' : helper.GPA,
+                'contestsScore' : helper.contestsScore
+            }
+            helpers_data.append(helper_data)
+    
+    r = Response(response=json.dumps({"data": helpers_data}), status=200, mimetype="application/json")
+    r.headers["Content-Type"] = "application/json; charset=utf-8"
+    return r

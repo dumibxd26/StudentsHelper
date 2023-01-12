@@ -7,7 +7,8 @@ import About from "./components/About/About";
 import NavbarComponent from './components/Navbar/Navbar.js';
 import Chat from './components/SocketIO/Chat.js';
 import SolveTest from './components/SolveTest/SolveTest.js';
-import FindMatch from './components/FindMatch/FindMatch.js';
+import FindMatch from './components/FindMatch/FindMatchForm';
+import HelpersTable from './components/FindMatch/HelpersTable.js';
 
 import Kok from './components/Kok/Kok.js';
 
@@ -98,6 +99,8 @@ class App extends React.Component {
               <Route exact path="/chat" element={<Chat />}/>
               <Route exact path="/solve" element={<SolveTest/>}/>
               <Route exact path="/findMatch" element={<FindMatch userType={this.state.userType}/>}/>
+              <Route exact path="/filterdHelpers" element={<HelpersTable userType={this.state.userType}/>}/>
+
 
               <Route exact path="/kok" element={<Kok />} />
      
