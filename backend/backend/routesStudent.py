@@ -14,9 +14,9 @@ def registerStudent():
 def getStudents():
     return serviceStudent.getAllStudentsService()
 
-@app.route("/getStudent/<email>" , methods=['GET'])
-def getStudent(email):
-    return serviceStudent.getStudentService(email)
+@app.route("/getStudent/<finder>" , methods=['GET'])
+def getStudent(finder):
+    return serviceStudent.getStudentService(finder)
 
 @app.route("/deleteStudent/<id>" , methods=['DELETE'])
 def deleteStudent(id):

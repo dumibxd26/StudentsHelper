@@ -14,9 +14,9 @@ def registerHelper():
 def getHelpers():
     return serviceHelper.getAllHelpersService()
 
-@app.route("/getHelper/<email>" , methods=['GET'])
-def getHelper(email):
-    return serviceHelper.getHelperService(email)
+@app.route("/getHelper/<finder>" , methods=['GET'])
+def getHelper(finder):
+    return serviceHelper.getHelperService(finder)
 
 @app.route("/deleteHelper/<id>" , methods=['DELETE'])
 def deleteHelper(id):

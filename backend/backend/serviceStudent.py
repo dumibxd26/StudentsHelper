@@ -94,8 +94,16 @@ def getAllStudentsService():
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
-def getStudentService(email):
-    student = dbs.Student.query.filter_by(email=email).first()
+def getStudentService(finder):
+    
+    student = None
+
+    # check is finder is a number(find by id)
+    try:
+        finder = int(finder)
+        student = dbs.Student.query.filter_by(id=finder).first()
+    except:
+        student = dbs.Student.query.filter_by(email=finder).first()
 
     if not student:
         return Response(response=json.dumps({"message": "User does not exist"}), status=400, mimetype="application/json")
@@ -114,33 +122,28 @@ def getStudentService(email):
 
     modify = False
     token = None
-
+    
     if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-        # return 401 if token is not passed
-    if not token:
-        return json.dumps({'error' : 'Token is missing !!', "modify": modify}), 401
+        token = request.headers['x-access-token']
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, 'SECRET_KEY', algorithms=['HS256'])
 
-    try:
-        # decoding the payload to fetch the stored details
-        data = jwt.decode(token, 'SECRET_KEY', algorithms=['HS256'])
+            if (data['exp'] < datetime.utcnow().timestamp()):
+                return json.dumps({
+                'message' : 'Token is expired !!'
+                }), 401
 
-        if (data['exp'] < datetime.utcnow().timestamp()):
-            return json.dumps({
-            'message' : 'Token is expired !!'
-            }), 401
-
-        studentQuery = dbs.Student.query\
-            .filter_by(id = data['id'])\
-            .first()
-        
-
-        if (int(studentQuery.id) == int(student_data['id'])):
-            modify = True
-    except:
-            return json.dumps({
-            'message' : 'Server failure !!'
-            }), 500
+            studentQuery = dbs.Student.query\
+                .filter_by(id = data['id'])\
+                .first()
+            
+            if (int(studentQuery.id) == int(student.id)):
+                modify = True
+        except:
+                return json.dumps({
+                'message' : 'Server failure !!'
+                }), 500
 
     r = Response(response=json.dumps({"message": "success", "data": student_data, "modify" : modify}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"

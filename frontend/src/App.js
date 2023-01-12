@@ -2,11 +2,14 @@ import React from 'react';
 import HomepageNotAuth from './components/HomepageNotAuth/HomepageNotAuth.js';
 //import HomepageAuth from './components/HomepageAuth/HomepageAuth.js';
 
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import About from "./components/About/About";
 import NavbarComponent from './components/Navbar/Navbar.js';
 import Chat from './components/SocketIO/Chat.js';
 import SolveTest from './components/SolveTest/SolveTest.js';
+import FindMatch from './components/FindMatch/FindMatch.js';
+
+import Kok from './components/Kok/Kok.js';
 
 class App extends React.Component {
 
@@ -91,10 +94,13 @@ class App extends React.Component {
           {this.state.userType}
           <Routes>
             
-              <Route exact path="/about" element={<About />}/>
+              <Route exact path="/about/:id" element={<About />}/>
               <Route exact path="/chat" element={<Chat />}/>
               <Route exact path="/solve" element={<SolveTest/>}/>
+              <Route exact path="/findMatch" element={<FindMatch userType={this.state.userType}/>}/>
 
+              <Route exact path="/kok" element={<Kok />} />
+     
           </Routes>
         </Router>
       }

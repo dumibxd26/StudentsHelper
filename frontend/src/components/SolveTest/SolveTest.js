@@ -66,8 +66,8 @@ class SolveTest extends React.Component {
             const JWT = localStorage.getItem("token");
 
             fetch("http://localhost:5000/checkTokenForFrontend/" + JWT, {
-            method: "GET",
-            headers: {"Content-Type": "application/json"},
+                method: "GET",
+                headers: {"Content-Type": "application/json"},
             })
             .then(response => response.json())
             .then(info => {

@@ -15,6 +15,11 @@ class NavbarComponent extends React.Component {
     super(props);
   }
 
+  handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.reload();
+  }
+
   render() {
     return (
         <>
@@ -29,11 +34,21 @@ class NavbarComponent extends React.Component {
                 >
                   <Offcanvas.Header closeButton>
                     <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${'xl'}`}>
-                      Offcanvas
+                      {/* Offcanvas */}
                     </Offcanvas.Title>
                   </Offcanvas.Header>
                   <Offcanvas.Body>
                     <Nav className="justify-content-end flex-grow-1 pe-3">
+
+                      { this.props.userType === "student" &&
+                        <>
+                          {
+                          window.location.href !== "http://localhost:3000/findMatch" ?
+                          <Nav.Link href="http://localhost:3000/findMatch">Find Matches</Nav.Link> :
+                          <Nav.Link disabled >Find Matches</Nav.Link>
+                          }
+                        </>
+                      }
 
                       {
                         window.location.href !== "http://localhost:3000/chat" ?
@@ -46,12 +61,18 @@ class NavbarComponent extends React.Component {
                         <Nav.Link href="http://localhost:3000/about">About</Nav.Link> :
                         <Nav.Link disabled >About</Nav.Link>
                       }
-                      {
-                        this.props.userType === "student" &&
-                        window.location.href !== "http://localhost:3000/solve" ?
-                        <Nav.Link href="http://localhost:3000/solve">Solve Random Test</Nav.Link> :
-                        <Nav.Link disabled >Solve Random Test</Nav.Link>
-                      }
+                      
+                      { this.props.userType === "student" &&
+                        <>
+                          {
+                          window.location.href !== "http://localhost:3000/solve" ?
+                          <Nav.Link href="http://localhost:3000/solve">Solve Random Test</Nav.Link> :
+                          <Nav.Link disabled >Solve Random Test</Nav.Link>
+                          }
+                        </>
+      }
+
+                      <Nav.Link href="http://localhost:3000" onClick={this.handleLogout}>Logout</Nav.Link>
                     </Nav>
                     <Form className="d-flex">
                       <Form.Control

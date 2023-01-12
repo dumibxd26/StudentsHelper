@@ -135,8 +135,15 @@ def getAllHelpersService():
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
-def getHelperService(email):
-    helper = dbs.Helper.query.filter_by(email=email).first()
+def getHelperService(finder):
+    
+    helper = None
+    # check is finder is a number(find by id)
+    try:
+        finder = int(finder)
+        helper = dbs.Helper.query.filter_by(id=finder).first()
+    except:
+        helper = dbs.Helper.query.filter_by(email=finder).first()
 
     if not helper:
         return Response(response=json.dumps({"message": "Helper not found"}), status=404, mimetype="application/json")
@@ -164,31 +171,26 @@ def getHelperService(email):
     token = None
 
     if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-        # return 401 if token is not passed
-    if not token:
-        return json.dumps({'error' : 'Token is missing !!', "modify": modify}), 401
+        token = request.headers['x-access-token']
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, 'SECRET_KEY', algorithms=['HS256'])
 
-    try:
-        # decoding the payload to fetch the stored details
-        data = jwt.decode(token, 'SECRET_KEY', algorithms=['HS256'])
+            if (data['exp'] < datetime.utcnow().timestamp()):
+                return json.dumps({
+                'message' : 'Token is expired !!'
+                }), 401
 
-        if (data['exp'] < datetime.utcnow().timestamp()):
-            return json.dumps({
-            'message' : 'Token is expired !!'
-            }), 401
+            helperQuery = dbs.Helper.query\
+                .filter_by(id = data['id'])\
+                .first()
 
-        helperQuery = dbs.Helper.query\
-            .filter_by(id = data['id'])\
-            .first()
-        
-
-        if (int(helperQuery.id) == int(helper_data['id'])):
-            modify = True
-    except:
-            return json.dumps({
-            'message' : 'Server failure !!'
-            }), 500
+            if (int(helperQuery.id) == int(helper.id)):
+                modify = True
+        except:
+                return json.dumps({
+                'message' : 'Server failure !!'
+                }), 500
 
     r = Response(response=json.dumps({"message": "succes", "data": helper_data, "modify": modify}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
