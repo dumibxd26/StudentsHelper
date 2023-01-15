@@ -46,7 +46,10 @@ class Login extends React.Component {
                 console.log(info)
                 const token = info.token;
 
+                const name = info.firstName + " " + info.lastName;
+
                 localStorage.setItem('token', token);
+                localStorage.setItem('name', name);
             }
         }
         )

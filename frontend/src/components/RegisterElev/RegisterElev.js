@@ -66,6 +66,7 @@ class Register extends React.Component {
                 const token = info.token;
 
                 localStorage.setItem('token', token);
+                localStorage.setItem('name', firstName + " " + lastName);
             }
         }
         )

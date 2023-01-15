@@ -9,31 +9,44 @@ function Chat() {
 
   let steps = 0;
 
-  useEffect(() => {
+  const initialiseConnection = () => {
 
-    socket.on('connect', () => {
-      console.log('Connected to the server');
+    socket.emit('join', {
+      name: localStorage.getItem('name'),
+      room: localStorage.getItem('currentChat')
     });
 
     // Listen for events emitted by the server
     socket.on('message', (data) => {
-      console.log(`Received message: ${data}`);
+      console.log(data);
 
       setMessages(prevState => {
         steps++;
 
-        if (steps % 2) return prevState;
-        return [...prevState, data]
+        if (data['room'] != localStorage.getItem('currentChat')) return [];
+        if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
+        return [...prevState, {message: data['message'], sender: data['name']}];
       });
     });
 
+  }
+
+  useEffect(() => {
+    initialiseConnection();
   }, []);
   
-    const handleClick = (e) => {
-        e.preventDefault();
-       socket.send(document.getElementById("messageId").value);
+  const handleClick = (e) => {
+      e.preventDefault();
 
-        document.getElementById("messageId").value = "";
+      const user = localStorage.getItem('name');
+
+      socket.emit('message', {message: document.getElementById("messageId").value, room: localStorage.getItem('currentChat'), name: user});
+      
+      setMessages(prevState => {
+        return [...prevState, {message: document.getElementById("messageId").value, sender: 'you'}];
+      });
+
+      document.getElementById("messageId").value = "";
     }
 
 
@@ -41,7 +54,7 @@ function Chat() {
     <div>
         <ul>
             {messages.map((message, index) => {
-                return <li key={index}>{message}</li>
+                return <li key={index}>{message.message + ', ' + message.sender}</li>
             })
             }     
         </ul>

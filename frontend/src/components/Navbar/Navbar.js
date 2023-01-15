@@ -17,6 +17,9 @@ class NavbarComponent extends React.Component {
 
   handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('name');
+    localStorage.removeItem('currentChat');
+    localStorage.removeItem('data');
     window.location.reload();
   }
 

@@ -1,5 +1,8 @@
 import React from "react";
 
+import io from 'socket.io-client';
+
+const socket = io.connect("http://localhost:5001");
 class HelperFilters extends React.Component {
 
   constructor(props) {
@@ -8,6 +11,8 @@ class HelperFilters extends React.Component {
     this.state = {
       displayData: null
     }
+
+    this.handleInitialiseChat = this.handleInitialiseChat.bind(this);
   }
 
   componentDidMount()
@@ -56,76 +61,70 @@ class HelperFilters extends React.Component {
     return workingCompanies;
   }
 
+  handleInitialiseChat = (helperName) => {
+    
+    socket.on('connect', () => {
+      console.log('Connected to the server');
+    });
+    
+    socket.on('disconnect', function() {
+      console.log('Disconnected from server');
+    });
+    
+    socket.emit('join', {
+      name: localStorage.getItem('name'), room: helperName,
+      message: 'Hello, I am ' + localStorage.getItem('name') + ' and I would like to chat with you.'});
+    
+    // socket.emit('join', {
+    //   name: localStorage.getItem('name'),
+    //   room: localStorage.getItem('name') + ' ' + helperName
+    // });
+
+    
+
+    localStorage.setItem('currentChat', localStorage.getItem('name') + ' ' + helperName);
+
+    window.location.href = 'http://localhost:3000/chat';
+  }
+
+
+
   render() {
     return (
        <>
       <table class="table table-hover table-dark">
   <thead>
-    <tr>
+    <tr  style={{textAlign:"center"}}>
       <th scope="col">#</th>
       <th scope="col">Name </th>
       <th scope="col">Companies worked at</th>
       <th scope="col">Contests Score </th>
       <th scope="col">GPA </th>
       <th scope="col">Faculty </th>
+      <th scope="col">Chat </th>
     </tr>
   </thead>
   <tbody>
 
-=
 
     { this.state.displayData && this.state.displayData.map((item, index) => {
 
       return (
-        <tr>
+        <tr style={{textAlign:"center"}}>
 
-        <th scope="row">{index + 1} </th>
-        <td> { item.firstName + ' ' + item.lastName } </td>
-        <td> { this.displayWorkingCompanies(item) } </td>
-        <td> { item.contestsScore } </td>
-        <td> { item.GPA }</td>
-        <td> { item.faculty + ' ' + item.college } </td>
+          <th scope="row">{index + 1} </th>
+          <td> { item.firstName + ' ' + item.lastName } </td>
+          <td> { this.displayWorkingCompanies(item) } </td>
+          <td> { item.contestsScore } </td>
+          <td> { item.GPA }</td>
+          <td> { item.faculty + ' ' + item.college } </td>
+          <td> <button type="button" class="btn btn-light" onClick={(e) => this.handleInitialiseChat(item.firstName + ' ' + item.lastName)}>Initialise Chat</button> </td>
 
         </tr>
       );
       })
     }
 
-
-    {/* <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td>Otto</td>
-
-    </tr> */}
-    {/* <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>Mark</td>
-      <td>Otto</td>
-
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-      <td>Mark</td>
-      <td>Otto</td>
-
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-      <td>Mark</td>
-
-      <td>@mdo</td>
-    </tr> */}
   </tbody>
 </table>
        </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import HomepageNotAuth from './components/HomepageNotAuth/HomepageNotAuth.js';
-//import HomepageAuth from './components/HomepageAuth/HomepageAuth.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import About from "./components/About/About";
@@ -11,6 +11,10 @@ import FindMatch from './components/FindMatch/FindMatchForm';
 import HelpersTable from './components/FindMatch/HelpersTable.js';
 
 import Kok from './components/Kok/Kok.js';
+
+import io, { Socket } from 'socket.io-client';
+
+const socket = io.connect("http://localhost:5001");
 
 class App extends React.Component {
 
@@ -30,9 +34,15 @@ class App extends React.Component {
     
   componentDidMount() {
 
+    // Joins the room with the same name of the user to receive messages from other users
+    socket.emit('join', {name : localStorage.getItem('name'), room : localStorage.getItem('name')});
+
+    if (localStorage.getItem('currentChat') == null) {
+      localStorage.removeItem('currentChat');
+    }
+
     const JWT = localStorage.getItem('token');
 
-    
     // fetch("http://localhost:5000/getAllHelpers", {
     //   method: "GET",
     //   headers: {"Content-Type": "application/json"},
