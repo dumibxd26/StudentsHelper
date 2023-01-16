@@ -1,9 +1,21 @@
 import React, { useEffect, useState} from 'react';
 import io from 'socket.io-client';
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBTextArea,
+  MDBIcon,
+  MDBBtn,
+  MDBTypography,
+  MDBCardHeader,
+} from "mdb-react-ui-kit";
 
 const socket = io('http://localhost:5001');
 
-function Chat() {
+export default function Kok() {
 
   const [messages, setMessages] = useState([]);
 
@@ -53,7 +65,7 @@ function Chat() {
             
                     if (data['room'] != localStorage.getItem('currentChat')) return [];
                     if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
-                    return [...prevState, {message: data['message'], sender: data['name']}];
+                    return [...prevState, {message: data['message'], sender: data['name'], time: data['time']}];
                   });
                 });
             })
@@ -74,7 +86,7 @@ function Chat() {
       
               if (data['room'] != localStorage.getItem('currentChat')) return [];
               if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
-              return [...prevState, {message: data['message'], sender: data['name']}];
+              return [...prevState, {message: data['message'], sender: data['name'], time: data['time']}];
             });
           });
       
@@ -92,35 +104,95 @@ function Chat() {
 
       const user = localStorage.getItem('name');
 
-      socket.emit('message', {message: document.getElementById("messageId").value, room: localStorage.getItem('currentChat'), name: user});
+      socket.emit('message', {message: document.getElementById("messageId").value,
+                             room: localStorage.getItem('currentChat'), name: user,
+                              time: new Date().toLocaleTimeString()});
       
       setMessages(prevState => {
-        return [...prevState, {message: document.getElementById("messageId").value, sender: 'you'}];
+        return [...prevState, {message: document.getElementById("messageId").value, sender: 'you', time: new Date().toLocaleTimeString()}];
       });
 
       document.getElementById("messageId").value = "";
     }
-
+  
+  const leaveRoom = () => {
+    socket.emit('leave', {name: localStorage.getItem('name') ,room: localStorage.getItem('currentChat')});
+    localStorage.removeItem('currentChat');
+  }
 
   return (
-    <div>
-        <ul>
+    <MDBContainer fluid className="py-5" style={{ backgroundColor: "#eee" }}>
+      <MDBRow>
+
+        <MDBCol>
+          <MDBTypography listUnStyled>
+
             {messages.map((message, index) => {
-                return <li key={index}>{message.message + ', ' + message.sender}</li>
-            })
-            }     
-        </ul>
-        <form>
-            {/* create a form for the socketio server */}
+                return (
+                    message.sender == 'you' ? 
+                  
+                    <li class="d-flex justify-content-between mb-4">
+                    <MDBCard className="w-100" style={{marginLeft:"10em"}}>
+                      <MDBCardHeader className="d-flex justify-content-between p-3">
+                        <p class="fw-bold mb-0">you</p>
+                        <p class="text-muted small mb-0">
+                          <MDBIcon far icon="clock" /> {message.time}
+                        </p>
+                      </MDBCardHeader>
+                      <MDBCardBody>
+                        <p className="mb-0">
+                          {message.message}
+                        </p>
+                      </MDBCardBody>
+                    </MDBCard>
+                    <img
+                      src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
+                      alt="avatar"
+                      className="rounded-circle d-flex align-self-start ms-3 shadow-1-strong"
+                      width="60"
+                    />
+                  </li>
+                  :
+                  <li className="d-flex justify-content-between mb-4">
+                  <img
+                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+                    alt="avatar"
+                    className="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
+                    width="60"
+                  />
+                  <MDBCard className="w-100" style={{marginRight:"10em"}}>
+                    <MDBCardHeader className="d-flex justify-content-between p-3">
+                      <p className="fw-bold mb-0">{message.sender}</p>
+                      <p className="text-muted small mb-0">
+                        <MDBIcon far icon="clock" /> {message.time}
+                      </p>
+                    </MDBCardHeader>
+                    <MDBCardBody>
+                      <p className="mb-0">
+                        {message.message}
+                      </p>
+                    </MDBCardBody>
+                  </MDBCard>
+                </li>
+                )
+            })}
 
-            <input type="text" id="messageId" />
+            <li className="bg-white mb-3">
+              <MDBTextArea label="Message" id="messageId" rows={4} />
+            </li>
 
-            <button onClick={handleClick}>Send</button>
+            <MDBBtn color="info" rounded className="float-end" onClick={handleClick}>
+              Send
+            </MDBBtn>
 
-        </form>
+            <MDBBtn color="info" rounded className="float-start" onClick={leaveRoom}>
+              Leave Chat
+            </MDBBtn>
 
-    </div>
+
+          </MDBTypography>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 }
-
-export default Chat;

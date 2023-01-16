@@ -92,7 +92,6 @@ class HelperFilters extends React.Component {
     .then(res => res.json())
     .then(info => {
         console.log(info)
-        alert(info);
 
         if (info.message == 'success') 
           window.location.href = "http://localhost:3000/chat";

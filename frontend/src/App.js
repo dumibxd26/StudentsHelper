@@ -10,7 +10,7 @@ import SolveTest from './components/SolveTest/SolveTest.js';
 import FindMatch from './components/FindMatch/FindMatchForm';
 import HelpersTable from './components/FindMatch/HelpersTable.js';
 
-import Kok from './components/Kok/Kok.js';
+// import asd from './components/asd/asd.js';
 
 import io, { Socket } from 'socket.io-client';
 
@@ -102,17 +102,16 @@ class App extends React.Component {
 
         <Router>
           <NavbarComponent userType={this.state.userType}/>
-          {this.state.userType}
           <Routes>
-            
+
+              <Route exact path="/" element={<h1 style={{textAlign:"center", fontWeight:"bold"}}>Bun venit, {localStorage.getItem('name')}!</h1>} />
               <Route exact path="/about/:email" element={<About />}/>
               <Route exact path="/chat" element={<Chat />}/>
               <Route exact path="/solve" element={<SolveTest/>}/>
               <Route exact path="/findMatch" element={<FindMatch userType={this.state.userType}/>}/>
               <Route exact path="/filterdHelpers" element={<HelpersTable userType={this.state.userType}/>}/>
 
-
-              <Route exact path="/kok" element={<Kok />} />
+              {/* <Route exact path="/asd" element={<asd />} /> */}
      
           </Routes>
         </Router>

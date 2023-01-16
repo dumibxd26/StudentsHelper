@@ -50,6 +50,8 @@ class Login extends React.Component {
 
                 localStorage.setItem('token', token);
                 localStorage.setItem('name', name);
+
+                window.location.reload();
             }
         }
         )
