@@ -61,7 +61,7 @@ class HelperFilters extends React.Component {
     return workingCompanies;
   }
 
-  handleInitialiseChat = (helperName) => {
+  handleInitialiseChat = (helperName, id) => {
     
     socket.on('connect', () => {
       console.log('Connected to the server');
@@ -80,11 +80,26 @@ class HelperFilters extends React.Component {
     //   room: localStorage.getItem('name') + ' ' + helperName
     // });
 
-    
+    console.log(id);
 
     localStorage.setItem('currentChat', localStorage.getItem('name') + ' ' + helperName);
+      
+    fetch("http://localhost:5000/openConnection", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({"id": id, "sender": localStorage.getItem('name')})  
+    })
+    .then(res => res.json())
+    .then(info => {
+        console.log(info)
+        alert(info);
 
-    window.location.href = 'http://localhost:3000/chat';
+        if (info.message == 'success') 
+          window.location.href = "http://localhost:3000/chat";
+    })
+    .catch(err => console.log(err));
+
+  
   }
 
 
@@ -118,7 +133,8 @@ class HelperFilters extends React.Component {
           <td> { item.contestsScore } </td>
           <td> { item.GPA }</td>
           <td> { item.faculty + ' ' + item.college } </td>
-          <td> <button type="button" class="btn btn-light" onClick={(e) => this.handleInitialiseChat(item.firstName + ' ' + item.lastName)}>Initialise Chat</button> </td>
+          <td> <button type="button" class="btn btn-light" onClick={(e) => this.handleInitialiseChat(item.firstName + ' ' + item.lastName, item.id)}>
+            Initialise Chat</button> </td>
 
         </tr>
       );

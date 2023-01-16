@@ -105,7 +105,7 @@ class App extends React.Component {
           {this.state.userType}
           <Routes>
             
-              <Route exact path="/about/:id" element={<About />}/>
+              <Route exact path="/about/:email" element={<About />}/>
               <Route exact path="/chat" element={<Chat />}/>
               <Route exact path="/solve" element={<SolveTest/>}/>
               <Route exact path="/findMatch" element={<FindMatch userType={this.state.userType}/>}/>

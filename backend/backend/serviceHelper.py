@@ -77,7 +77,7 @@ def registerHelperService():
 
     password = generate_password_hash(req['password'], method='sha256')
 
-    newHelper = dbs.Helper(req['firstName'], req['lastName'], req['email'], password, req['college'], req['faculty'] ,req['workGoogle'], req['workMeta'], req['workBloomberg'], req['workAmazon'], req['workMicrosoft'], req['workApple'], req['workHedgeFund'], req['workingCompanies'], req['GPA'], req['contestsScore'])
+    newHelper = dbs.Helper(req['firstName'], req['lastName'], req['email'], password, req['college'], req['faculty'] ,req['workGoogle'], req['workMeta'], req['workBloomberg'], req['workAmazon'], req['workMicrosoft'], req['workApple'], req['workHedgeFund'], req['workingCompanies'], req['GPA'], req['contestsScore'], ' ', ' ')
 
     dbs.db.session.add(newHelper)
     dbs.db.session.commit()
@@ -168,6 +168,7 @@ def getHelperService(finder):
     helper_data['workingCompanies'] = helper.workingCompanies
     helper_data['GPA'] = helper.GPA
     helper_data['contestsScore'] = helper.contestsScore
+    helper_data['description'] = helper.description
 
     modify = False
     token = None
@@ -276,25 +277,48 @@ def updateHelperService(id):
         }), 401
 
     # helper = dbs.Helper.query.filter_by(id=id).first()
-    helper.firstName = request.json['firstName']
-    helper.lastName = request.json['lastName']
-    helper.email = request.json['email']
-    helper.password = request.json['password']
-    helper.college = request.json['college']
-    helper.workGoogle = request.json['workGoogle']
-    helper.workMeta = request.json['workMeta']
-    helper.workBloomberg = request.json['workBloomberg']
-    helper.workAmazon = request.json['workAmazon']
-    helper.workMicrosoft = request.json['workMicrosoft']
-    helper.workApple = request.json['workApple']
-    helper.workHedgeFund = request.json['workHedgeFund']
-    helper.workingCompanies = request.json['workingCompanies']
-    helper.GPA = request.json['GPA']
-    helper.contestsScore = request.json['contestsScore']
+    if 'firstName' in request.json:
+        helper.firstName = request.json['firstName']
+    if 'lastName' in request.json:
+        helper.lastName = request.json['lastName']
+    if 'email' in request.json:
+        helper.email = request.json['email']
+    if 'password' in request.json:
+        helper.password = request.json['password']
+    if 'college' in request.json:
+        helper.college = request.json['college']
+    if 'workGoogle' in request.json:
+        helper.workGoogle = request.json['workGoogle']
+    if 'workMeta' in request.json:
+        helper.workMeta = request.json['workMeta']
+    if 'workBloomberg' in request.json:
+        helper.workBloomberg = request.json['workBloomberg']
+    if 'workAmazon' in request.json:
+        helper.workAmazon = request.json['workAmazon']
+    if 'workMicrosoft' in request.json:
+        helper.workMicrosoft = request.json['workMicrosoft']
+    if 'workApple' in request.json:
+        helper.workApple = request.json['workApple']
+    if 'workHedgeFund' in request.json:
+        helper.workHedgeFund = request.json['workHedgeFund']
+    if 'workingCompanies' in request.json:
+        helper.workingCompanies = request.json['workingCompanies']
+    if 'GPA' in request.json:
+        helper.GPA = request.json['GPA']
+    if 'contestsScore' in request.json:
+        helper.contestsScore = request.json['contestsScore']
+    if 'description' in request.json:
+        helper.description = request.json['description']
     
     dbs.db.session.commit()
 
-    r = Response(response=json.dumps({"message": f"Helper {helper} had been updated"}), status=200, mimetype="application/json")
+    updateAccount = {}
+    updateAccount['firstName'] = helper.firstName
+    updateAccount['lastName'] = helper.lastName
+    updateAccount['GPA'] = helper.GPA
+    updateAccount['description'] = helper.description
+
+    r = Response(response=json.dumps({"message": "success", "data": updateAccount},), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
@@ -316,6 +340,7 @@ def getHelpersByRequirementsService():
     workingCompanies = req['workingCompanies']
     college = req['college']
     faculty = req['faculty']
+    
 
     workingCompanies = workingCompanies.lower()
 
@@ -335,6 +360,7 @@ def getHelpersByRequirementsService():
         print(workingCompanies)
         if helper.workingCompanies.__contains__(workingCompanies.lower()) :
             helper_data = {
+                'id': helper.id,
                 'firstName' : helper.firstName,
                 'lastName' : helper.lastName,
                 'college' : helper.college,
@@ -353,5 +379,42 @@ def getHelpersByRequirementsService():
             helpers_data.append(helper_data)
     
     r = Response(response=json.dumps({"data": helpers_data}), status=200, mimetype="application/json")
+    r.headers["Content-Type"] = "application/json; charset=utf-8"
+    return r
+
+def openConnectionService():
+    req = request.json
+
+    receivingUserId = req['id']
+    sendingUser = req['sender']
+
+    receivingUser = dbs.Helper.query.filter_by(id=receivingUserId).first()
+    receivingUser.chatName = sendingUser + ' ' + receivingUser.firstName + ' ' + receivingUser.lastName
+
+    dbs.db.session.commit()
+
+    r = ''
+    if (receivingUser == None):
+        r = Response(response=json.dumps({"message": "error"}), status=404, mimetype="application/json")
+    else:
+        receivingUserName = receivingUser.firstName + ' ' + receivingUser.lastName
+        r = Response(response=json.dumps({"message": "success", "data": sendingUser + ' ' + receivingUserName}), status=200, mimetype="application/json")
+
+    r.headers["Content-Type"] = "application/json; charset=utf-8"
+    return r
+
+def checkConnectionService():
+    req = request.json
+
+    id = req['id']
+
+    helper = dbs.Helper.query.filter_by(id=id).first()
+
+    r = ''
+    if (helper.chatName and len(helper.chatName) > 3): 
+        r = Response(response=json.dumps({"message": "success", "room": helper.chatName}), status=200, mimetype="application/json")
+    else:
+        r = Response(response=json.dumps({"message": "error"}), status=404, mimetype="application/json")
+
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r

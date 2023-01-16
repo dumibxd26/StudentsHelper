@@ -47,7 +47,7 @@ def registerStudentService():
     
     password = generate_password_hash(req['password'], method='sha256')
 
-    newStudent = dbs.Student(req['firstName'], req['lastName'], req['email'], password, req['school'], req['GPA'], req['contestsScore'], req['testsScore'], req['testsSolved'])
+    newStudent = dbs.Student(req['firstName'], req['lastName'], req['email'], password, req['school'], req['GPA'], req['contestsScore'], req['testsScore'], req['testsSolved'], '')
 
     dbs.db.session.add(newStudent)
     dbs.db.session.commit()
@@ -119,6 +119,7 @@ def getStudentService(finder):
     student_data['contestsScore'] = student.contestsScore
     student_data['testsScore'] = student.testsScore
     student_data['testsSolved'] = student.testsSolved
+    student_data['description'] = student.description
 
     modify = False
     token = None
@@ -250,9 +251,19 @@ def updateStudentService(id): #merge
         student.contestsScore = req['contestsScore']
     if 'testsScore' in req:
         student.testsScore = req['testsScore']
+    if 'description' in req:
+        student.description = req['description']
     
     dbs.db.session.commit()
 
-    r = Response(response=json.dumps({"message": f"Student {student} had been updated in the database"}), status=200, mimetype="application/json")
+    updateAccount = {}
+    updateAccount['firstName'] = student.firstName
+    updateAccount['lastName'] = student.lastName
+    updateAccount['GPA'] = student.GPA
+    updateAccount['description'] = student.description
+
+    print(req)
+
+    r = Response(response=json.dumps({"message": "success", "data": updateAccount}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r

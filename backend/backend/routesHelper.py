@@ -30,6 +30,14 @@ def updateHelper(id):
 def getHelpersByRequirements():
     return serviceHelper.getHelpersByRequirementsService()
 
+@app.route("/openConnection", methods=['POST'])
+def openConnection():
+    return serviceHelper.openConnectionService()
+
+@app.route("/checkConnection", methods=['POST'])
+def checkConnection():
+    return serviceHelper.checkConnectionService()
+
 # extra
 @app.route("/checkTokenForFrontend/<token>" , methods=['GET'])
 def checkTokenForFrontend(token):

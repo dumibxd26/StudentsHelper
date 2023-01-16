@@ -18,11 +18,13 @@ class Student(db.Model):
     contestsScore = db.Column(db.Integer, unique=True, nullable=False)
     testsScore = db.Column(db.Integer, unique=True, nullable=False)
     testsSolved = db.Column(db.Integer, unique=True, nullable=False)
+    description = db.Column(db.String(120), unique=True, nullable=True)
+    # chatName = db.Column(db.String(120), unique=True, nullable=True)
 
     def __repr__(self):
         return f"{self.firstName} - {self.lastName} - {self.email}"
 
-    def __init__(self, firstName, lastName, email, password, school, GPA, contestsScore, testsScore, testsSolved):
+    def __init__(self, firstName, lastName, email, password, school, GPA, contestsScore, testsScore, testsSolved, description):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
@@ -32,6 +34,8 @@ class Student(db.Model):
         self.contestsScore = contestsScore
         self.testsScore = testsScore
         self.testsSolved = testsSolved
+        self.description = description
+        # self.chatName = chatName
 
 class Helper(db.Model):
     __tablename__ = 'helper'
@@ -53,11 +57,15 @@ class Helper(db.Model):
     workingCompanies = db.Column(db.String(120), unique=True, nullable=False)
     GPA = db.Column(db.Float, unique=True, nullable=False)
     contestsScore = db.Column(db.Integer, unique=True, nullable=False)
+    description = db.Column(db.String(120), unique=True, nullable=True)
+    chatName = db.Column(db.String(120), unique=True, nullable=True)
 
     def __repr__(self):
         return f"{self.firstName} - {self.lastName} - {self.email}"
 
-    def __init__(self, firstName, lastName, email, password, college, faculty, workGoogle, workMeta, workBloomberg, workAmazon, workMicrosoft, workApple, workHedgeFund, workingCompanies, GPA, contestsScore):
+    def __init__(self, firstName, lastName, email, password, college, faculty,
+     workGoogle, workMeta, workBloomberg, workAmazon, workMicrosoft, workApple, workHedgeFund, workingCompanies,
+      GPA, contestsScore, description, chatName):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
@@ -74,6 +82,8 @@ class Helper(db.Model):
         self.workingCompanies = workingCompanies
         self.GPA = GPA
         self.contestsScore = contestsScore
+        self.description = description
+        self.chatName = chatName
 
 class Test(db.Model):
     __tablename__ = 'test'

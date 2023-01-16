@@ -28,7 +28,7 @@ def on_leave(data):
     name = data['name']
     room = data['room']
     leave_room(room)
-    send(name + ' has left the room.', room=room)
+    send(name + ' has left.', room=room)
 
 @socketio.on('message')
 def on_message(data):

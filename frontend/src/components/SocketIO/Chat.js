@@ -11,24 +11,76 @@ function Chat() {
 
   const initialiseConnection = () => {
 
-    socket.emit('join', {
-      name: localStorage.getItem('name'),
-      room: localStorage.getItem('currentChat')
-    });
+    // let roomName = localStorage.getItem('currentChat');
 
-    // Listen for events emitted by the server
-    socket.on('message', (data) => {
-      console.log(data);
+    const JWT = localStorage.getItem("token");
 
-      setMessages(prevState => {
-        steps++;
+    if (!JWT) {
+      return ;
+    }
 
-        if (data['room'] != localStorage.getItem('currentChat')) return [];
-        if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
-        return [...prevState, {message: data['message'], sender: data['name']}];
-      });
-    });
+    fetch("http://localhost:5000/checkTokenForFrontend/" + JWT, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"}
+    })
+    .then((res) => res.json())
+    .then(data => {
+        const userType = data.userType;
+        const id = data.id;
 
+        if (userType === "helper") {
+            fetch("http://localhost:5000/checkConnection", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({id: id})
+            })
+            .then((res) => res.json())
+            .then(data => {
+                const roomName = data.room
+                localStorage.setItem('currentChat', roomName);
+
+                socket.emit('join', {
+                  name: localStorage.getItem('name'),
+                  room: roomName
+                });
+            
+                // Listen for events emitted by the server
+                socket.on('message', (data) => {
+                  console.log(data);
+            
+                  setMessages(prevState => {
+                    steps++;
+            
+                    if (data['room'] != localStorage.getItem('currentChat')) return [];
+                    if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
+                    return [...prevState, {message: data['message'], sender: data['name']}];
+                  });
+                });
+            })
+            .catch(err => console.log(err));
+        } else {
+
+          socket.emit('join', {
+            name: localStorage.getItem('name'),
+            room: localStorage.getItem('currentChat')
+          });
+      
+          // Listen for events emitted by the server
+          socket.on('message', (data) => {
+            console.log(data);
+      
+            setMessages(prevState => {
+              steps++;
+      
+              if (data['room'] != localStorage.getItem('currentChat')) return [];
+              if (steps % 2 || data['name'] == localStorage.getItem('name')) return prevState;
+              return [...prevState, {message: data['message'], sender: data['name']}];
+            });
+          });
+      
+        }
+    })
+    .catch(err => console.log(err));
   }
 
   useEffect(() => {
