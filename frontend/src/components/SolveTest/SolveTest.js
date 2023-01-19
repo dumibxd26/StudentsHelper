@@ -35,7 +35,7 @@ class SolveTest extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const userAnswers = {
-            "testNumber": this.state.data["testNumber"],
+            "id": this.state.data.id,
             "Q1A": document.getElementById("Q1A").value == "" ? " " : document.getElementById("Q1A").value,
             "Q2A": document.getElementById("Q2A").value == "" ? " " : document.getElementById("Q2A").value,
             "Q3A": document.getElementById("Q3A").value == "" ? " " : document.getElementById("Q3A").value,

@@ -6,9 +6,9 @@ from backend import serviceTests
 def addTest():
     return serviceTests.addTestService()
 
-@app.route("/removeTest/<testNumberDelete>", methods=['DELETE'])
-def removeTest(testNumberDelete):
-    return serviceTests.removeTestService(testNumberDelete)
+@app.route("/removeTest/<id>", methods=['DELETE'])
+def removeTest(id):
+    return serviceTests.removeTestService(id)
 
 @app.route("/getRandomTest", methods=['GET'])
 def getRandomTest():
@@ -17,7 +17,3 @@ def getRandomTest():
 @app.route("/checkTestAnswer", methods=['POST'])
 def checkTestAnswer():
     return serviceTests.checkTestAnswerService()
-
-@app.route("/getNumberOfTests", methods=['GET'])
-def getNumberOfTests():
-    return serviceTests.getNumberOfTestsService()

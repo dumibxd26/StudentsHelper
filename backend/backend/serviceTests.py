@@ -6,28 +6,23 @@ import random
 def getNumberOfTestsService():
 
     numberOfTest = dbs.Test.query.count()
-
-    r = Response(response=json.dumps({"message": "Number of tests", "data": numberOfTest}), status=200, mimetype="application/json")
-    r.headers["Content-Type"] = "application/json; charset=utf-8"
-    return r
-
+    return numberOfTest
+    
 def addTestService():
     req = request.get_json()
 
-    nextTestNumber = dbs.Test.query.count() + 1
-
-    newTest = dbs.Test(nextTestNumber, req['Q1'], req['Q2'], req['Q3'], req['Q4'], req['Q5'], req['Q6'], req['Q7'], req['Q8'], req['Q9'], req['Q10'],
+    newTest = dbs.Test(req['Q1'], req['Q2'], req['Q3'], req['Q4'], req['Q5'], req['Q6'], req['Q7'], req['Q8'], req['Q9'], req['Q10'],
                        req['Q1A'], req['Q2A'], req['Q3A'], req['Q4A'], req['Q5A'], req['Q6A'], req['Q7A'], req['Q8A'], req['Q9A'], req['Q10A'])
 
     dbs.db.session.add(newTest)
     dbs.db.session.commit()
 
-    r = Response(response=json.dumps({"message": f"Test {nextTestNumber} added"}), status=200, mimetype="application/json")
+    r = Response(response=json.dumps({"message": "New test added"}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
-def removeTestService(testNumberDelete):
-    testToDelete = dbs.Test.query.filter_by(testNumber=testNumberDelete).first()
+def removeTestService(id):
+    testToDelete = dbs.Test.query.filter_by(id=id).first()
 
     if (testToDelete == None):
         r = Response(response=json.dumps({"message": "Test not found"}), status=404, mimetype="application/json")
@@ -37,17 +32,20 @@ def removeTestService(testNumberDelete):
     dbs.db.session.delete(testToDelete)
     dbs.db.session.commit()
 
-    r = Response(response=json.dumps({"message": f"Test {testNumberDelete} deleted"}), status=200, mimetype="application/json")
+    r = Response(response=json.dumps({"message": f"Test deleted"}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
 def getRandomTestService():
-    numberOfTest = dbs.Test.query.count()
+    numberOfTest = getNumberOfTestsService()
     randomTestNumber = random.randint(1, numberOfTest)
-    randomTest = dbs.Test.query.filter_by(testNumber=randomTestNumber).first()
+
+    randomTest = dbs.Test.query.offset(randomTestNumber - 1).first()
+
+    print(randomTest.id)
 
     data = {
-        "testNumber": randomTest.testNumber,
+        "id": randomTest.id,
         "Q1": randomTest.Q1,
         "Q2": randomTest.Q2,
         "Q3": randomTest.Q3,
@@ -57,28 +55,18 @@ def getRandomTestService():
         "Q7": randomTest.Q7,
         "Q8": randomTest.Q8,
         "Q9": randomTest.Q9,
-        "Q10": randomTest.Q10,
-        "Q1A": randomTest.Q1A,
-        "Q2A": randomTest.Q2A,
-        "Q3A": randomTest.Q3A,
-        "Q4A": randomTest.Q4A,
-        "Q5A": randomTest.Q5A,
-        "Q6A": randomTest.Q6A,
-        "Q7A": randomTest.Q7A,
-        "Q8A": randomTest.Q8A,
-        "Q9A": randomTest.Q9A,
-        "Q10A": randomTest.Q10A
+        "Q10": randomTest.Q10
     }
 
-    r = Response(response=json.dumps({"message": f"Test {randomTestNumber}", "data": data}), status=200, mimetype="application/json")
+    r = Response(response=json.dumps({"data": data}), status=200, mimetype="application/json")
     r.headers["Content-Type"] = "application/json; charset=utf-8"
     return r
 
 def checkTestAnswerService():
     req = request.get_json()
 
-    testNumber = req['testNumber']
-    testToCheck = dbs.Test.query.filter_by(testNumber=testNumber).first()
+    testNumber = req['id']
+    testToCheck = dbs.Test.query.filter_by(id=testNumber).first()
 
     if (testToCheck == None):
         r = Response(response=json.dumps({"message": "Test not found"}), status=404, mimetype="application/json")

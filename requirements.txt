@@ -1,0 +1,8 @@
+Flask
+flask-restful
+flask-cors
+psycopg2-binary
+flask-sqlalchemy
+flask-bcrypt
+flask-jwt-extended
+flask-socketio

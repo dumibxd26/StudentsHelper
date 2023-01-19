@@ -14,7 +14,7 @@ When entering entering the app, you are prompted with two options of login/regis
     As student(elev), name, email(etc.), and some contests score that you
 have participated at(OJI- olimpiada judeteana de informatica, OJM- de matematica, etc), GPA. 
  <br />
-    As a helper(student), you have to tell some companies that you worked for, contests results, College, College.
+    As a helper(student), you have to tell some companies that you worked for, contests results, College.
 <br />
     The total contest score is calculated with a formula on the backend(because ONI(national) is more important than OJI, and it worths more total points, oji's maximum result is 10 times more than ojm's maximum result, etc). JUST WANTED to mention that the total contest score is calculated properly :).
 
@@ -40,6 +40,7 @@ When pressing('find student'), users with the desired criterias are shown in a t
 The navbar only has 4 buttons
 - Students Helper<br />
 - Chat -> Redirects to a chat initialised by a user <br />
+- About
 - Logout<br />
 
 MUST MENTION: No data is HARDCODED, all the features from the frontend are
@@ -72,5 +73,25 @@ Youtube videos followed for information about creating a fullstack app which's i
 Python/Flask errors: Countless...(for example, when a route isn't working, and a request is made from the front, you get a CORS error(we know-> ????), so we studied a lot of CORS problems just to see that the problem was from the server, because every error on a server just results in a CORS error on the web).<br />
 The database had to be initialised manually on pgAdmin because some command from youtube videos didn't work, and since we changed the schemas a lot of times, it as painful to recreate tables on and on.<br />
 
+Docker is not working after hours of research.<br />
+
 Our experience when we started: 0, but we gained a lot of useful information and it was a lot of fun!
 
+
+### Running the project
+
+On frontend: npm install, npm start<br />
+
+On backend: pip install Flask psycopg2-binary python-socketio Flask-Cors Flask-SQLAlchemy<br />
+	    run with: flask --app backend run<br />
+On SocketIO: pip install Flask Flask-SocketIO Flask-Cors<br />
+	    run with: flask run --p 5001 <br />
+
+### Teamwork:
+    Each member worked on a component on the frontend and on the backend,
+    and a component on the backend. 
+
+Marinescu Alexandru -> Find matches component and routes for Helper CRUD
+Dragomir Andrei -> Solve Test backend and frontend
+Dumitru Stefania -> About page + backend Student
+Dumitrescu Bogdan -> Chat (frontend & backend), JWT implementation(Register & Login), frontend-backend linking, additional features

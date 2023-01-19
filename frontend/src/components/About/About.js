@@ -190,7 +190,7 @@ class About extends React.Component {
                         { this.state.userType === "student" &&
                         <>
                           <p>School: {this.state.data['school']}</p>
-                          <p>Test Score: {this.state.data['testsScore']}</p>
+                          <p>Test Score: {this.state.data['testsScore'] / this.state.data['testsSolved']}</p>
                           <p>Tests Solved: {this.state.data['testsSolved']}</p>
                         </>
                         }

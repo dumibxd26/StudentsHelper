@@ -88,7 +88,7 @@ class Helper(db.Model):
 class Test(db.Model):
     __tablename__ = 'test'
 
-    testNumber = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     Q1 = db.Column(db.String(120), nullable=False)
     Q2 = db.Column(db.String(120), nullable=False)
     Q3 = db.Column(db.String(120), nullable=False)
@@ -111,10 +111,9 @@ class Test(db.Model):
     Q10A = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
-        return f"{self.testNumber}"
+        return f"Test {self.id}"
     
-    def __init__(self, testNumber, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q1A, Q2A, Q3A, Q4A, Q5A, Q6A, Q7A, Q8A, Q9A, Q10A):
-        self.testNumber = testNumber
+    def __init__(self, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q1A, Q2A, Q3A, Q4A, Q5A, Q6A, Q7A, Q8A, Q9A, Q10A):
         self.Q1 = Q1
         self.Q2 = Q2
         self.Q3 = Q3
